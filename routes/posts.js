@@ -1,5 +1,5 @@
 var router = require('express').Router();
-const Post = require('../Models/Post');
+const Post = require('../Models/Post')
 
 
 router.get('', async(req, res) => {
@@ -12,15 +12,12 @@ router.get('', async(req, res) => {
 });
 
 router.post('/create', async(req, res)=> {
-  const post = new Post({
-    title: req.body.title,
-    description: req.body.description,
-  });
+  const post = new Post(req.body);
   try {
     const savedPost = await post.save();
     res.send(savedPost)
-  }catch(err){
-    res.send(console.log(err))
+  }catch(error){
+    res.status(500).json({status: 'failed', message: error.message })
   }
 
 });
@@ -30,7 +27,7 @@ router.get('/:postId', async(req, res) => {
     const post = await Post.findById(req.params.postId);
     res.json(post)
   }catch(error){
-    res.json(error)
+    res.status(404).json({status: 'failed', message: error.message })
   }
 });
 
@@ -39,7 +36,7 @@ router.delete('/:postId', async(req, res) => {
     const post = await Post.remove({_id: req.params.postId});
     res.json(post)
   }catch(error){
-    res.json(error)
+    res.status(404).json({status: 'failed', message: error.message })
   }
 });
 
@@ -50,7 +47,7 @@ router.patch('/:postId', async(req, res) => {
       );
     res.json({message:"Success ", body: post})
   }catch(error){
-    res.json(error)
+    res.status(404).json({status: 'failed', message: error.message })
   }
 });
 
